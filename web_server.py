@@ -6,12 +6,14 @@ from pydantic import Field, AnyUrl
 import api_method as api
 from app import const
 from app.const import API_V1
+from schemas.services.audio import Language
 from system.module.WebAPI import WebAPI
 
 
 method = {}
 implementation = {
-    api.ImageService: (const.NSFW_NAME, const.AESTHETICS_NAME, const.CLASSIFICATOR_NAME)
+    api.ImageService: (const.NSFW_NAME, const.AESTHETICS_NAME, const.CLASSIFICATOR_NAME),
+    api.AudioService: (const.WHISPER_NAME,),
 }
 
 app = WebAPI(
@@ -34,7 +36,7 @@ async def index():
     return {"ping": 'OK'}
 
 
-@app.post(f"{API_V1}/image/classify", tags=['Image service'], openapi_extra={'model': const.CLASSIFICATOR_NAME})
+@app.post(f"{API_V1}/image/classificator", tags=['Image service'], openapi_extra={'model': const.CLASSIFICATOR_NAME})
 async def image_classify_view(
         labels: List[str] = Query(None),
         image: UploadFile = File(None, description='Image content'),
@@ -53,7 +55,7 @@ async def image_classify_view(
     return get_request(bool(result), e, result)
 
 
-@app.post(f"{API_V1}/image/nsfw_detect", tags=['Image service'], openapi_extra={'model': const.NSFW_NAME})
+@app.post(f"{API_V1}/image/nsfw_detector", tags=['Image service'], openapi_extra={'model': const.NSFW_NAME})
 async def image_nsfw_detect_view(
         safe_coefficient: Optional[float] = Query(default=1, le=2, ge=0.2,
                                                   description='Коэффициент преобразования для регулирования чувствительности на nsfw контент. Выше коэффициент = меньше чувствительность'),
@@ -90,6 +92,21 @@ async def image_quality_scorer_view(
         return get_request(False, 'Image or image_url are required', None)
 
     result, e = await method[const.AESTHETICS_NAME].quality_scorer_handler(image_url or image)
+    return get_request(bool(result), e, result)
+
+
+@app.post(f"{API_V1}/audio/stt", tags=['Audio service'], openapi_extra={'model': const.WHISPER_NAME})
+async def stt_view(
+        language: Language,
+        file: UploadFile = File(...)
+):
+    """
+    Speach to text
+    """
+    if not file.content_type.startswith('audio'):
+        return get_request(False, 'File must be audio', None)
+
+    result, e = await method[const.WHISPER_NAME].stt(file, language.name)
     return get_request(bool(result), e, result)
 
 

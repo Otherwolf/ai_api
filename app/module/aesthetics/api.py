@@ -1,3 +1,6 @@
+"""
+Predicts aesthetic scores for images. Trained on AI Horde community ratings of Stable Diffusion generated images.
+"""
 import inspect
 import os
 
@@ -18,3 +21,6 @@ class AestheticsScorerApi(Api):
             return self.model.predict(file_path)
         except Exception as e:
             print(e)
+
+    def __str__(self):
+        return f'AestheticsScorerApi[{self.model.device}]'

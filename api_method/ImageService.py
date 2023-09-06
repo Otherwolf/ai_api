@@ -8,6 +8,7 @@ from app.module.BaseApi import BaseApi
 class ImageService(BaseApi):
 
 # ---------------------- NSFW detect ------------------------------------
+
     nsfw_categories = ('porn', 'hentai', 'sexy',)
     safe_categories = ('drawings', 'neutral',)
 

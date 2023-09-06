@@ -9,3 +9,5 @@ API_V1 = '/api/v1'
 NSFW_NAME = 'nsfw_detect'
 AESTHETICS_NAME = 'aesthetics'
 CLASSIFICATOR_NAME = 'classificator'
+
+WHISPER_NAME = 'whisper'
