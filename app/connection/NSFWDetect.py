@@ -11,7 +11,7 @@ class NSFWDetect(ImageBaseConnection):
         self.conn = NSFWDetectorApi()
         self.executor = ThreadPoolExecutor(max_workers=max_workers)
 
-        self.logger.info(f"Успешное соединение: {self.conn}, {max_workers=}")
+        self.logger.info(f"Connection is successful: {self.conn}, {max_workers=}")
         return True
 
     async def classify(self, input_data):

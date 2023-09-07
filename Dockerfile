@@ -1,18 +1,23 @@
-FROM python:3.9.8-slim-buster
-
-RUN apt-get update \
-  && apt-get install -y curl gnupg g++ \
-  && apt-get install -y libgssapi-krb5-2 \
-  && apt-get install -y libpq-dev \
-  && apt-get autoremove -y \
-  && apt-get clean \
-  && rm -rf /var/lib/apt/lists/*
+FROM nvidia/cuda:11.8.0-cudnn8-runtime-ubuntu20.04
 
 ENV PYTHONUNBUFFERED=1 \
-    # prevents python creating .pyc files
-    PYTHONDONTWRITEBYTECODE=1
+    PYTHONDONTWRITEBYTECODE=1 \
+    DEBIAN_FRONTEND=noninteractive
 
-WORKDIR /my_app/
-COPY . ./
+RUN apt update && \
+    apt install --no-install-recommends -y build-essential software-properties-common && \
+    add-apt-repository -y ppa:deadsnakes/ppa && \
+    apt install --no-install-recommends -y python3.9 python3-pip python3-setuptools python3-distutils && \
+    apt clean && rm -rf /var/lib/apt/lists/*
 
-RUN pip install --upgrade pip && pip install -r req.txt
+# Копирование файлов проекта в контейнер
+COPY . /app
+WORKDIR /app
+
+# Установка зависимостей Python
+RUN python3.9 -m pip install --upgrade pip &&  \
+    python3.9 -m pip install --no-cache-dir -r ./req.txt
+
+# Запуск вашего приложения
+CMD ["python3.9", "web_server.py"]
+EXPOSE 8080

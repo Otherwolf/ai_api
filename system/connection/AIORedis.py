@@ -12,12 +12,12 @@ class AIORedis(BaseConnection):
             self.pool = self.r = await aioredis.create_redis_pool(f"redis://{self.values['host']}:"
                                                                   f"{self.values.get('port', 6379)}", **params)
             if self.r.ping():
-                self.logger.info("Redis подключен!")
+                self.logger.info("Redis connected!")
                 return True
             else:
-                self.logger.error("Redis не пингуется!")
+                self.logger.error("Redis doesn`t ping!")
         except aioredis.ProtocolError:
-            self.logger.error("Redis не подключен!")
+            self.logger.error("Redis is not connected!")
         return False
 
     # Генерация ключа

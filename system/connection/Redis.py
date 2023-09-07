@@ -11,12 +11,12 @@ class Redis(BaseConnection):
             self.pool = redis.ConnectionPool(**self.values)
             self.r = redis.Redis(connection_pool=self.pool)
             if self.r.ping():
-                self.logger.info("Redis подключен!")
+                self.logger.info("Redis connected!")
                 return True
             else:
-                self.logger.error("Redis не пингуется!")
+                self.logger.error("Redis doesn`t ping!")
         except redis.ConnectionError:
-            self.logger.error("Redis не подключен!")
+            self.logger.error("Redis is not connected!")
         return False
 
     # Генерация ключа

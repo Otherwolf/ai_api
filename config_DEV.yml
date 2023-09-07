@@ -1,0 +1,46 @@
+app_name: ai_api
+app_get_info: 'Сервис ожидает POST-запрос!'
+message_min_length: 10 # Минимальная длинна сообщения
+logger:
+  type: 'loguru'
+  level: 'debug'
+  format: '<i><level>{level: <8}</level></i> <w>{time:YYYY-MM-DD HH:mm:ss.SSS}</w> <i><c>{extra[module]}</c></i> - <level>{message}</level>'
+
+web_server:  # Настройки для веб-сервера
+    log_level: error
+    port: 8080
+    health_checker: # Проверка работоспособности
+        url_health: /healthness_reply
+        url_live: /liveness_reply
+    connection: # Соединения используемые для веб-сервера
+        - nsfw_detect
+#        - classificator
+#        - whisper
+#        - aesthetics
+
+connection:
+    # https://github.com/GantMan/nsfw_model
+    nsfw_detect:
+        class: NSFWDetect
+        priority: 2
+        values:
+          max_workers: 1
+
+    classificator:
+        class: Classificator
+        priority: 3
+        values:
+          max_workers: 1
+
+    whisper:
+      class: Whisper
+      priority: 4
+      values:
+        max_workers: 1
+
+    # https://github.com/kenjiqq/aesthetics-scorer
+    aesthetics:
+        class: Aesthetics
+        priority: 5
+        values:
+          max_workers: 1

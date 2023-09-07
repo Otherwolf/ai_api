@@ -122,9 +122,9 @@ class RabbitMQ(BaseConnection):
                         self.logger.error(f"Не удается инициализировать очередь {queue_name}!")
                         return False
                 else:
-                    self.logger.warning(f'RabbitMQ: успешно инициализирован!')
+                    self.logger.warning(f'RabbitMQ: inited successful!')
                     return True
         except ConnectionError:
             pass
-        self.logger.error('RabbitMQ: Нет подключения к пулу каналов или очереди!')
+        self.logger.error('RabbitMQ: No pool of connections!')
         return False

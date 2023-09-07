@@ -29,7 +29,7 @@ class WebAPI(FastAPI):
         # health_checker
         if health_checker := self.config.web_server.get('health_checker'):  # Работоспособность
             if health_checker.get('url_health') and health_checker.get('url_live'):
-                self.logger.debug(f"Инициализация проверки работоспособности (url_health="
+                self.logger.debug(f"Initialization of check working (url_health="
                                   f"{health_checker['url_health']} url_live={health_checker['url_live']})")
 
                 @self.get(health_checker['url_live'])

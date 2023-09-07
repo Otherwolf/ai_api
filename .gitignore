@@ -1,7 +1,6 @@
 venv*
 .env
 sqlite
-config_*
 Open*
 .idea*
 # Byte-compiled / optimized / DLL files

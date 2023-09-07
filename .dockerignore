@@ -1,0 +1,55 @@
+# Git
+.git
+.gitignore
+
+# Gitlab
+.gitlab-ci.yml
+
+# Docker
+Dockerfile
+Dockerfile.*
+.dockerignore
+
+# Byte-complied / optimized / DLL files
+**/__pycache__/
+**/*.py[cod]
+.pytest_cache
+
+# Distribution / packaging
+.Python
+env/
+venv/
+#build/
+develop-eggs/
+# dist/
+downloads/
+eggs/
+.eggs/
+lib64/
+parts/
+sdist/
+var/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Django migrations
+#**/migrations/*.py
+!**/migrations/__init__.py
+
+# Swap files
+**/*.swp
+
+# NPM files
+#**/node_modules/
+#**/dist/
+#bower_components/
+
+# Docs
+*.md
+
+# Logs
+*.log
+
+# IDE settings
+.vscode

@@ -37,12 +37,12 @@ class BaseWorker(ABC):
                 elif res is False:
                     await msg_send['message'].nack()
             time_end = time()
-            msg_err_count_txt = f" ошибки: {self.__msg_err_count} " if self.__msg_err_count else ""
-            self.logger.info(f"--- Cообщение #{msg_send['message_num']} "
-                             f"время обработки: {round(time_end - time_start, 4)} "
-                             f"время ответа: {round(time_end - msg_send['time_incoming'], 4)}{msg_err_count_txt} ---")
+            msg_err_count_txt = f" Errors: {self.__msg_err_count} " if self.__msg_err_count else ""
+            self.logger.info(f"--- Message #{msg_send['message_num']} "
+                             f"time prepare: {round(time_end - time_start, 4)} "
+                             f"time response: {round(time_end - msg_send['time_incoming'], 4)}{msg_err_count_txt} ---")
             self.queue.task_done()  # Элемент отработан
-        self.logger.warning(f"Воркер {self.worker_name} остановлен!")
+        self.logger.warning(f"Worker {self.worker_name} stopped!")
         self.iwork = False
 
     async def prepare(self):

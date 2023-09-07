@@ -28,7 +28,7 @@ class BaseConnection(ABC):
 # Инициализация соединений, не относится к классу
 async def init_connection(connections, params, logger, dispatcher=None, name_list_filter=None):
     if not connections or not isinstance(connections, dict):
-        logger.error('Не задано ни одного соединения!')
+        logger.error('No one connection!')
         return False
     for priority in set(value.get('priority', 0) for value in connections.values()):
         tasks, obj_list = [], []
@@ -68,7 +68,7 @@ async def init_connection(connections, params, logger, dispatcher=None, name_lis
                     logger.error(result)
                     return False
         elif not name_list_filter:
-            logger.error("Не найдено ни одного соединения!")
+            logger.error("No one connection!")
             return False
-    logger.info('Установлены все соединения!')
+    logger.info('All connections is inited!')
     return True
