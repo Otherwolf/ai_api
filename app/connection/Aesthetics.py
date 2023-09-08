@@ -1,14 +1,16 @@
 import os
 from concurrent.futures import ThreadPoolExecutor
 
-from app.connection.ImageBaseConnection import ImageBaseConnection
+from app.connection.BaseConnection import BaseConnection
 from app.module.aesthetics.api import AestheticsScorerApi
 
 
-class Aesthetics(ImageBaseConnection):
+class Aesthetics(BaseConnection):
     async def connection(self):
         max_workers = self.values.get('max_workers', 5)
-        self.conn = AestheticsScorerApi()
+        device = self.values.get('device')
+
+        self.conn = AestheticsScorerApi(device)
         self.executor = ThreadPoolExecutor(max_workers=max_workers)
 
         self.logger.info(f"Connection is successful: {self.conn}, {max_workers=}")

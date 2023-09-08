@@ -8,26 +8,24 @@ The efficiency can be further improved with 8-bit quantization on both CPU and G
 """
 from typing import Optional, BinaryIO
 
-import tensorflow as tf
-from whisper_jax import FlaxWhisperPipline
+import torch
+import whisper
 
 from app.module.api import Api
-
-
-OMP_NUM_THREADS = 8
 
 
 class WhisperApi(Api):
     """
     api integration of https://github.com/guillaumekln/faster-whisper
     """
-    def __init__(self, model_name: str = 'openai/whisper-small'):
-        self.device = 'cuda' if tf.config.list_physical_devices('GPU') else 'cpu'
-        self.pipeline = FlaxWhisperPipline(model_name)
+    def __init__(self, model_name: str = 'small'):
+        self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+        self.model = whisper.load_model(model_name).to(self.device)
 
     def recognize(self, file_bytes: bytes, language: Optional[str]):
         try:
-            return self.pipeline(file_bytes, language=language)
+            with torch.cuda.device(self.device):
+                return self.model.transcribe(file_bytes, language=language)
         except Exception as e:
             print(e)
 

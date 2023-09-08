@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Optional
 
 import torch
 from PIL import Image
@@ -7,10 +7,13 @@ import tensorflow as tf
 from transformers import CLIPProcessor, CLIPModel
 
 
+DEFAULT_MODEL_NAME = 'openai/clip-vit-base-patch32'
+
+
 class ClassificatorModel:
-    def __init__(self):
-        self.model_name = 'openai/clip-vit-base-patch32'
-        self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    def __init__(self, device: Optional[str], model_name: Optional[str] = DEFAULT_MODEL_NAME):
+        self.model_name = model_name or DEFAULT_MODEL_NAME
+        self.device = torch.device(device or ("cuda" if torch.cuda.is_available() else "cpu"))
         self.model = CLIPModel.from_pretrained(self.model_name).to(self.device)
         self.processor = CLIPProcessor.from_pretrained(self.model_name)
 

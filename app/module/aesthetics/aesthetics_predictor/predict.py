@@ -1,5 +1,6 @@
 import inspect
 import os
+from typing import Optional
 
 import torch
 from PIL import Image
@@ -8,11 +9,14 @@ from .model import preprocess, load_model
 from transformers import CLIPModel, CLIPProcessor
 
 
+DEFAULT_MODEL_NAME = 'laion/CLIP-ViT-H-14-laion2B-s32B-b79K'
+
+
 class AestheticModel:
-    def __init__(self):
-        self.model_name = "laion/CLIP-ViT-H-14-laion2B-s32B-b79K"
+    def __init__(self, device: Optional[str], model_name: Optional[str] = DEFAULT_MODEL_NAME):
+        self.model_name = model_name or DEFAULT_MODEL_NAME
         # self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-        self.device = 'cpu'
+        self.device = torch.device(device or ("cuda" if torch.cuda.is_available() else "cpu"))
 
         model = CLIPModel.from_pretrained(self.model_name)
         self.vision_model = model.vision_model

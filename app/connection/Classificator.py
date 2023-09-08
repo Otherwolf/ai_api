@@ -1,14 +1,16 @@
 import os
 from concurrent.futures import ThreadPoolExecutor
 
-from app.connection.ImageBaseConnection import ImageBaseConnection
+from app.connection.BaseConnection import BaseConnection
 from app.module.classificator.api import ClassificatorApi
 
 
-class Classificator(ImageBaseConnection):
+class Classificator(BaseConnection):
     async def connection(self):
         max_workers = self.values.get('max_workers', 5)
-        self.conn = ClassificatorApi()
+        device = self.values.get('device')
+
+        self.conn = ClassificatorApi(device)
         self.executor = ThreadPoolExecutor(max_workers=max_workers)
 
         self.logger.info(f"Connection is successful: {self.conn}, {max_workers=}")

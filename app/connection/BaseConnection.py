@@ -2,10 +2,10 @@ import random
 
 import starlette
 
-from system.connection.BaseConnection import BaseConnection
+from system.connection.BaseConnection import BaseConnection as bs
 
 
-class ImageBaseConnection(BaseConnection):
+class BaseConnection(bs):
     async def _prepare_image(self, input_data):
         if isinstance(input_data, starlette.datastructures.UploadFile):
             input_data = await self.save_image(input_data)

@@ -1,7 +1,7 @@
 from app.module.whisper_jax.api import WhisperApi
 from concurrent.futures import ThreadPoolExecutor
 
-from system.connection.BaseConnection import BaseConnection
+from app.connection.BaseConnection import BaseConnection
 
 
 class Whisper(BaseConnection):
@@ -14,6 +14,7 @@ class Whisper(BaseConnection):
         return True
 
     async def recognize(self, input_data, language):
+        input_data = await self._prepare_image(input_data)
         return await self.loop.run_in_executor(self.executor, self.conn.recognize, input_data, language)
 
     async def close(self):

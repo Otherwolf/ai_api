@@ -3,7 +3,7 @@ import traceback
 
 from os import listdir
 from os.path import isfile, join, exists, isdir, abspath
-from typing import List, Union, Tuple, Any
+from typing import List, Union, Tuple, Any, Optional
 
 import numpy as np
 import tensorflow as tf
@@ -14,15 +14,23 @@ import tensorflow_hub as hub
 
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
 
+DEFAULT_MODEL_NAME = 'nsfw.299x299'
+DOWNLOAD_DEFAULT_MODEL_LINK = "https://s3.amazonaws.com/ir_public/ai/nsfw_models/february_2019_nsfw.299x299.h5"
+
 
 class Predictor:
-    def __init__(self, model_path: str, image_dim: int = 299):
+    def __init__(self, device: Optional[str], model_path: str = DEFAULT_MODEL_NAME, image_dim: int = 299):
         self.image_dim = image_dim
-        if physical_devices := tf.config.list_physical_devices('GPU'):
+
+        if (physical_devices := tf.config.list_physical_devices('GPU')) and device != 'cpu':
             tf.config.experimental.set_memory_growth(physical_devices[0], True)
             self.device = '/GPU:0'
-        else:
+
+        elif device != 'gpu':
             self.device = '/CPU:0'
+
+        if not hasattr(self, 'device'):
+            raise Exception('The model NSFW detector doesn`t have device option')
 
         with tf.device(self.device):
             self.model = tf.keras.models.load_model(model_path, custom_objects={

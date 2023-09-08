@@ -44,3 +44,4 @@ connection:
         priority: 5
         values:
           max_workers: 1
+          device: cpu
