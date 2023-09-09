@@ -13,9 +13,9 @@ web_server:  # Настройки для веб-сервера
         url_health: /healthness_reply
         url_live: /liveness_reply
     connection: # Соединения используемые для веб-сервера
-        - nsfw_detect
+#        - nsfw_detect
 #        - classificator
-#        - whisper
+#        - whisper надо доделать whisper jax, но он работает только с linux
 #        - aesthetics
 
 connection:

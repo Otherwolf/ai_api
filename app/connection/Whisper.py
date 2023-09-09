@@ -7,7 +7,9 @@ from app.connection.BaseConnection import BaseConnection
 class Whisper(BaseConnection):
     async def connection(self):
         max_workers = self.values.get('max_workers', 5)
-        self.conn = WhisperApi()
+        device = self.values.get('device')
+
+        self.conn = WhisperApi(device)
         self.executor = ThreadPoolExecutor(max_workers=max_workers)
 
         self.logger.info(f"Connection is successful: {self.conn}, {max_workers=}")

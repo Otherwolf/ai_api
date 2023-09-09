@@ -6,10 +6,11 @@ This implementation is up to 4 times faster than openai/whisper for the same acc
 The efficiency can be further improved with 8-bit quantization on both CPU and GPU.
 
 """
+import io
 from typing import Optional, BinaryIO
 
 import torch
-import whisper
+from faster_whisper import WhisperModel
 
 from app.module.api import Api
 
@@ -18,14 +19,13 @@ class WhisperApi(Api):
     """
     api integration of https://github.com/guillaumekln/faster-whisper
     """
-    def __init__(self, model_name: str = 'small'):
-        self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-        self.model = whisper.load_model(model_name).to(self.device)
+    def __init__(self, device: Optional[str], model_name: str = 'small'):
+        self.device = device or 'cuda'
+        self.model = WhisperModel(model_name, device=self.device)
 
-    def recognize(self, file_bytes: bytes, language: Optional[str]):
+    def recognize(self, file_bytes: io.BytesIO, language: Optional[str]):
         try:
-            with torch.cuda.device(self.device):
-                return self.model.transcribe(file_bytes, language=language)
+            return self.model.transcribe(file_bytes, beam_size=5, language=language)
         except Exception as e:
             print(e)
 
